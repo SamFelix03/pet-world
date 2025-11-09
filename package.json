@@ -24,6 +24,7 @@
     "@stellar/stellar-xdr-json": "^23.0.0",
     "@tanstack/react-query": "^5.90.2",
     "lossless-json": "^4.2.0",
+    "lottie-react": "^2.4.1",
     "lucide-react": "^0.553.0",
     "next": "^16.0.1",
     "react": "^19.1.1",

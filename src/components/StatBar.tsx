@@ -11,10 +11,10 @@ export function StatBar({ label, value, max, color }: StatBarProps) {
   const filledBlocks = Math.round((percentage / 100) * blocks)
 
   return (
-    <div className="mb-4">
-      <div className="flex justify-between items-center mb-2">
-        <span className="text-sm font-semibold">{label}</span>
-        <span className="text-sm font-bold font-mono">{value}/{max}</span>
+    <div className="mb-5">
+      <div className="flex justify-between items-center mb-3">
+        <span className="text-xl font-bold font-fredoka">{label}</span>
+        <span className="text-xl font-black font-fredoka">{value}/{max}</span>
       </div>
       <div 
         className="flex gap-1 p-2 rounded-lg border-4 border-black"

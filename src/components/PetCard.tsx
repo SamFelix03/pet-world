@@ -1,4 +1,5 @@
 import { cn } from '../lib/utils'
+import { PetAvatar } from './PetAvatar'
 
 interface PetCardProps {
   tokenId: number
@@ -8,11 +9,9 @@ interface PetCardProps {
   onClick: () => void
 }
 
-const EVOLUTION_STAGES = ['🥚', '🐣', '🦖', '🐲']
 const STAGE_COLORS = ['#e0e0e0', '#ffeb3b', '#ff9800', '#f44336']
 
 export function PetCard({ tokenId, name, stage, isSelected, onClick }: PetCardProps) {
-  const emoji = EVOLUTION_STAGES[stage] || '🥚'
   const stageColor = STAGE_COLORS[stage] || '#e0e0e0'
 
   return (
@@ -29,8 +28,8 @@ export function PetCard({ tokenId, name, stage, isSelected, onClick }: PetCardPr
         borderColor: isSelected ? stageColor : '#000',
       }}
     >
-      <div className="text-7xl mb-4 transform transition-transform hover:scale-110">
-        {emoji}
+      <div className="mb-4 transform transition-transform hover:scale-110">
+        <PetAvatar evolutionStage={stage} size="lg" />
       </div>
       <h3 className="m-0 mb-2 text-2xl font-bold font-chango" style={{
         textShadow: "2px 2px 0px rgba(0,0,0,0.1)",

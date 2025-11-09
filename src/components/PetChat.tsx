@@ -121,8 +121,8 @@ function PetChatComponent({ petName, evolutionStage, happiness, hunger, health, 
   return (
     <div className="pet-chat">
       <div className="chat-header">
-        <span style={{ fontSize: '18px' }}>✨</span>
-        <h3>Talk to {petName}</h3>
+        <span className="text-xl">✨</span>
+        <h3 className="font-bold text-lg">Talk to {petName}</h3>
       </div>
 
       <div className="chat-messages" ref={chatMessagesRef}>
@@ -158,7 +158,7 @@ function PetChatComponent({ petName, evolutionStage, happiness, hunger, health, 
           disabled={isLoading}
         />
         <button onClick={handleSend} disabled={!input.trim() || isLoading}>
-          <span style={{ fontSize: '18px' }}>➤</span>
+          <span className="text-lg">➤</span>
         </button>
       </div>
     </div>

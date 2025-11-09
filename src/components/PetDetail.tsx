@@ -4,6 +4,13 @@ import { getPetInfo, feedPet, playWithPet, updatePetState } from '../services/pe
 import { PetChat } from './PetChat'
 import { Button } from './ui/button'
 import { StatBar } from './StatBar'
+import { PetAvatar } from './PetAvatar'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from './ui/dialog'
 
 interface PetDetailProps {
   tokenId: number
@@ -19,6 +26,7 @@ export function PetDetail({ tokenId, onBack }: PetDetailProps) {
   const [loading, setLoading] = useState(true)
   const [actionLoading, setActionLoading] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [chatOpen, setChatOpen] = useState(false)
 
   const loadPetInfo = useCallback(async () => {
     if (!address) return
@@ -112,7 +120,6 @@ export function PetDetail({ tokenId, onBack }: PetDetailProps) {
     return null
   }
 
-  const stageEmoji = EVOLUTION_STAGES[petInfo.evolutionStage] || '🥚'
   const stageColor = STAGE_COLORS[petInfo.evolutionStage] || '#e0e0e0'
 
   return (
@@ -125,15 +132,16 @@ export function PetDetail({ tokenId, onBack }: PetDetailProps) {
         ← Back to Pet List
       </Button>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-5">
-        {/* Left: Pet Info */}
+      {/* Top Section: Pet Avatar/Name and Stats/Actions */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        {/* Left: Pet Avatar and Name */}
         <div 
-          className="bg-white rounded-2xl p-8 border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0)]"
+          className="bg-white rounded-2xl p-8 border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0)] flex flex-col items-center justify-center"
           style={{ borderColor: stageColor }}
         >
-          <div className="text-center mb-8">
-            <div className="text-8xl mb-6 transform transition-transform hover:scale-110">
-              {stageEmoji}
+          <div className="text-center w-full">
+            <div className="mb-6 transform transition-transform hover:scale-110 flex justify-center">
+              <PetAvatar evolutionStage={petInfo.evolutionStage} size="xl" />
             </div>
             <h2 className="m-0 mb-3 text-4xl font-bold font-chango" style={{
               textShadow: "3px 3px 0px rgba(0,0,0,0.1)",
@@ -147,10 +155,16 @@ export function PetDetail({ tokenId, onBack }: PetDetailProps) {
               {EVOLUTION_STAGES[petInfo.evolutionStage]}
             </div>
           </div>
+        </div>
 
+        {/* Right: Stats and Actions */}
+        <div 
+          className="bg-white rounded-2xl p-8 border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0)]"
+          style={{ borderColor: stageColor }}
+        >
           {/* Stats */}
           <div className="mb-6">
-            <h3 className="mb-4 text-lg font-semibold">Stats</h3>
+            <h3 className="mb-5 text-2xl font-bold font-fredoka">Stats</h3>
             
             <StatBar
               label="Happiness"
@@ -175,7 +189,7 @@ export function PetDetail({ tokenId, onBack }: PetDetailProps) {
           </div>
 
           {/* Actions */}
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-4">
             <Button
               type="button"
               onClick={(e) => {
@@ -184,7 +198,7 @@ export function PetDetail({ tokenId, onBack }: PetDetailProps) {
                 handleAction('feed')
               }}
               disabled={actionLoading !== null}
-              className="bg-gradient-to-br from-orange-600 to-orange-400 text-white border-0"
+              className="bg-gradient-to-br from-orange-600 to-orange-400 text-white border-0 text-lg font-bold py-4 font-fredoka"
               style={{ opacity: actionLoading === 'feed' ? 0.6 : 1 }}
             >
               {actionLoading === 'feed' ? 'Feeding...' : '🍖 Feed'}
@@ -198,7 +212,7 @@ export function PetDetail({ tokenId, onBack }: PetDetailProps) {
                 handleAction('play')
               }}
               disabled={actionLoading !== null}
-              className="bg-gradient-to-br from-yellow-500 to-yellow-300 text-gray-900 border-0"
+              className="bg-gradient-to-br from-yellow-500 to-yellow-300 text-gray-900 border-0 text-lg font-bold py-4 font-fredoka"
               style={{ opacity: actionLoading === 'play' ? 0.6 : 1 }}
             >
               {actionLoading === 'play' ? 'Playing...' : '🎮 Play'}
@@ -212,7 +226,7 @@ export function PetDetail({ tokenId, onBack }: PetDetailProps) {
                 handleAction('update')
               }}
               disabled={actionLoading !== null}
-              className="col-span-2 bg-gradient-to-br from-blue-500 to-blue-400 text-white border-0"
+              className="col-span-2 bg-gradient-to-br from-blue-500 to-blue-400 text-white border-0 text-lg font-bold py-4 font-fredoka"
               style={{ opacity: actionLoading === 'update' ? 0.6 : 1 }}
             >
               {actionLoading === 'update' ? 'Updating...' : '🔄 Update State'}
@@ -220,25 +234,43 @@ export function PetDetail({ tokenId, onBack }: PetDetailProps) {
           </div>
 
           {error && (
-            <div className="mt-4 p-3 bg-red-50 text-red-700 rounded-lg text-sm">
+            <div className="mt-4 p-3 bg-red-50 text-red-700 rounded-lg text-sm border-2 border-red-300 font-bold">
               {error}
             </div>
           )}
         </div>
-
-        {/* Right: Chat */}
-        <div>
-          <PetChat
-            key={`chat-${tokenId}`}
-            petName={petInfo.name}
-            evolutionStage={petInfo.evolutionStage}
-            happiness={petInfo.happiness}
-            hunger={petInfo.hunger}
-            health={petInfo.health}
-            age={petInfo.age}
-          />
-        </div>
       </div>
+
+      {/* Talk Button - Below everything */}
+      <div className="flex justify-center mt-6">
+        <Button
+          type="button"
+          onClick={() => setChatOpen(true)}
+          className="w-1/3 bg-gradient-to-br from-pink-500 to-purple-500 text-white border-0 text-xl font-bold py-5 shadow-[6px_6px_0px_0px_rgba(0,0,0)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-fredoka"
+        >
+          💬 Talk
+        </Button>
+      </div>
+
+      {/* Chat Modal */}
+      <Dialog open={chatOpen} onOpenChange={setChatOpen}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-hidden p-0">
+          <DialogHeader className="sr-only">
+            <DialogTitle>Chat with {petInfo.name}</DialogTitle>
+          </DialogHeader>
+          <div className="p-0">
+            <PetChat
+              key={`chat-${tokenId}`}
+              petName={petInfo.name}
+              evolutionStage={petInfo.evolutionStage}
+              happiness={petInfo.happiness}
+              hunger={petInfo.hunger}
+              health={petInfo.health}
+              age={petInfo.age}
+            />
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

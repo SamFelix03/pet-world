@@ -18,6 +18,7 @@ const config = {
     extend: {
       fontFamily: {
         chango: ["var(--font-chango)", "sans-serif"],
+        fredoka: ["Fredoka", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",
