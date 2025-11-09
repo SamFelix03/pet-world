@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Profile } from "@stellar/design-system";
 import { useWallet } from "../hooks/useWallet";
 import { useWalletBalance } from "../hooks/useWalletBalance";
-import { disconnectWallet } from "../util/wallet";
+import { connectWallet, disconnectWallet } from "../util/wallet";
 import { Button } from "./ui/button";
 import {
   Dialog,
@@ -17,17 +17,15 @@ import { cn } from "../lib/utils";
 export const WalletButton = () => {
   const [showDisconnectModal, setShowDisconnectModal] = useState(false);
   const { address, isPending } = useWallet();
-  const { xlm, isLoading, error, updateBalance } = useWalletBalance();
-
-  // Refresh balance when address changes
-  useEffect(() => {
-    if (address) {
-      updateBalance();
-    }
-  }, [address, updateBalance]);
+  const { xlm, ...balance } = useWalletBalance();
+  const buttonLabel = isPending ? "Loading..." : "Connect";
 
   if (!address) {
-    return null; // Should not show on home page if not connected
+    return (
+      <Button onClick={() => void connectWallet()}>
+        {buttonLabel}
+      </Button>
+    );
   }
 
   // Badge/pill style container matching button design
@@ -40,20 +38,10 @@ export const WalletButton = () => {
 
   return (
     <>
-      <div className="flex flex-row items-center gap-3">
+      <div className="flex flex-row items-center gap-3" style={{ opacity: balance.isLoading ? 0.6 : 1 }}>
         {/* Balance Badge */}
-        <div className={badgeStyle} style={{ opacity: isLoading ? 0.6 : 1 }}>
-          {isLoading ? (
-            <span className="text-gray-500">Loading...</span>
-          ) : error ? (
-            <span className="text-red-600" title={error.message}>
-              Error
-            </span>
-          ) : (
-            <span>
-              Balance: <span className="font-mono">{xlm}</span> XLM
-            </span>
-          )}
+        <div className={badgeStyle}>
+          <span>Wallet Balance: {xlm} XLM</span>
         </div>
 
         {/* Wallet Profile Badge */}
@@ -84,7 +72,9 @@ export const WalletButton = () => {
           <DialogFooter>
             <Button
               variant="outline"
-              onClick={() => setShowDisconnectModal(false)}
+              onClick={() => {
+                setShowDisconnectModal(false);
+              }}
             >
               Cancel
             </Button>

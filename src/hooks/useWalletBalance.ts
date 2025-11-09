@@ -34,10 +34,28 @@ export const useWalletBalance = () => {
       const balances = await fetchBalance(address);
       const isFunded = checkFunding(balances);
       const native = balances.find(({ asset_type }) => asset_type === "native");
+      
+      // Debug logging
+      console.log("Balance fetch result:", { balances, native, address });
+      
+      // Handle balance display - show "0" if balance exists but is 0, only show "-" if not found
+      let xlmDisplay = "-";
+      if (native) {
+        const balanceValue = native.balance;
+        if (balanceValue !== undefined && balanceValue !== null) {
+          const balanceNum = Number(balanceValue);
+          if (!isNaN(balanceNum)) {
+            xlmDisplay = formatter.format(balanceNum);
+          }
+        }
+      }
+      
+      console.log("XLM display value:", xlmDisplay);
+      
       setState({
         isLoading: false,
         balances,
-        xlm: native?.balance ? formatter.format(Number(native.balance)) : "-",
+        xlm: xlmDisplay,
         isFunded,
         error: null,
       });

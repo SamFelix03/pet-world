@@ -3,6 +3,7 @@ import { useWallet } from '../hooks/useWallet'
 import { getPetInfo, feedPet, playWithPet, updatePetState } from '../services/petworldContract'
 import { PetChat } from './PetChat'
 import { Button } from './ui/button'
+import { StatBar } from './StatBar'
 
 interface PetDetailProps {
   tokenId: number
@@ -124,19 +125,23 @@ export function PetDetail({ tokenId, onBack }: PetDetailProps) {
         ← Back to Pet List
       </Button>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-5">
         {/* Left: Pet Info */}
         <div 
-          className="bg-white rounded-2xl p-6 shadow-lg"
-          style={{ border: `3px solid ${stageColor}` }}
+          className="bg-white rounded-2xl p-8 border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0)]"
+          style={{ borderColor: stageColor }}
         >
-          <div className="text-center mb-6">
-            <div className="text-7xl mb-4">
+          <div className="text-center mb-8">
+            <div className="text-8xl mb-6 transform transition-transform hover:scale-110">
               {stageEmoji}
             </div>
-            <h2 className="m-0 mb-2 text-3xl font-bold">{petInfo.name}</h2>
+            <h2 className="m-0 mb-3 text-4xl font-bold font-chango" style={{
+              textShadow: "3px 3px 0px rgba(0,0,0,0.1)",
+            }}>
+              {petInfo.name}
+            </h2>
             <div 
-              className="inline-block px-4 py-2 rounded-full text-white font-semibold text-sm"
+              className="inline-block px-5 py-2 rounded-lg text-white font-bold text-sm border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0)]"
               style={{ background: stageColor }}
             >
               {EVOLUTION_STAGES[petInfo.evolutionStage]}
@@ -147,44 +152,26 @@ export function PetDetail({ tokenId, onBack }: PetDetailProps) {
           <div className="mb-6">
             <h3 className="mb-4 text-lg font-semibold">Stats</h3>
             
-            <div className="mb-3">
-              <div className="flex justify-between mb-1">
-                <span>Happiness</span>
-                <span className="font-semibold">{petInfo.happiness}/100</span>
-              </div>
-              <div className="h-3 bg-gray-200 rounded-full overflow-hidden">
-                <div 
-                  className="h-full bg-gradient-to-r from-yellow-500 to-yellow-300 transition-all duration-500"
-                  style={{ width: `${petInfo.happiness}%` }}
-                ></div>
-              </div>
-            </div>
+            <StatBar
+              label="Happiness"
+              value={petInfo.happiness}
+              max={100}
+              color="#ffc107"
+            />
 
-            <div className="mb-3">
-              <div className="flex justify-between mb-1">
-                <span>Hunger</span>
-                <span className="font-semibold">{petInfo.hunger}/100</span>
-              </div>
-              <div className="h-3 bg-gray-200 rounded-full overflow-hidden">
-                <div 
-                  className="h-full bg-gradient-to-r from-orange-600 to-orange-400 transition-all duration-500"
-                  style={{ width: `${petInfo.hunger}%` }}
-                ></div>
-              </div>
-            </div>
+            <StatBar
+              label="Hunger"
+              value={petInfo.hunger}
+              max={100}
+              color="#ff5722"
+            />
 
-            <div className="mb-3">
-              <div className="flex justify-between mb-1">
-                <span>Health</span>
-                <span className="font-semibold">{petInfo.health}/100</span>
-              </div>
-              <div className="h-3 bg-gray-200 rounded-full overflow-hidden">
-                <div 
-                  className="h-full bg-gradient-to-r from-pink-600 to-pink-400 transition-all duration-500"
-                  style={{ width: `${petInfo.health}%` }}
-                ></div>
-              </div>
-            </div>
+            <StatBar
+              label="Health"
+              value={petInfo.health}
+              max={100}
+              color="#e91e63"
+            />
           </div>
 
           {/* Actions */}
