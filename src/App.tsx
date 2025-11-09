@@ -8,6 +8,7 @@ function App() {
     <Routes>
       <Route path="/" element={<Landing />} />
       <Route path="/home" element={<Home />} />
+      <Route path="/home/pet/:tokenId" element={<Home />} />
       <Route path="/debug" element={<Debugger />} />
       <Route path="/debug/:contractName" element={<Debugger />} />
     </Routes>
