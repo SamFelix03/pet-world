@@ -7,6 +7,8 @@ import { WalletProvider } from "./providers/WalletProvider.tsx";
 import { NotificationProvider } from "./providers/NotificationProvider.tsx";
 import { BrowserRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+// Validate environment variables on startup
+import "./config/env.ts";
 
 const queryClient = new QueryClient({
   defaultOptions: {
