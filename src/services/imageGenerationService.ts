@@ -2,7 +2,7 @@
 // Generates pet avatar images using the imagegen API
 
 // Use proxy in development, direct URL in production
-const IMAGEGEN_API_URL = '/api/imagegen/generate-image'
+const IMAGEGEN_API_URL = 'https://fablelands-stellar-sa5q.vercel.app/api/imagegen/generate-image'
 
 export type CreatureType = 'dragon' | 'unicorn' | 'dino'
 
