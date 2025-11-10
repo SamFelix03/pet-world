@@ -7,10 +7,6 @@
     {
       "source": "/api/clipgen/:path*",
       "destination": "https://clipgen-739298578243.us-central1.run.app/:path*"
-    },
-    {
-      "source": "/api/s3-proxy",
-      "destination": "/api/s3-proxy"
     }
   ],
   "headers": [

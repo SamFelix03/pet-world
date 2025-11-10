@@ -41,6 +41,57 @@ export interface VideoGenerationResult {
 }
 
 /**
+ * Convert image URL to blob using canvas (client-side only, avoids CORS)
+ * This works because browsers allow loading images from any origin into <img> tags
+ */
+function imageUrlToBlob(imageUrl: string): Promise<Blob> {
+  return new Promise((resolve, reject) => {
+    const img = new Image()
+    img.crossOrigin = 'anonymous' // Try to enable CORS if available
+    
+    img.onload = () => {
+      try {
+        // Create a canvas and draw the image
+        const canvas = document.createElement('canvas')
+        canvas.width = img.width
+        canvas.height = img.height
+        const ctx = canvas.getContext('2d')
+        
+        if (!ctx) {
+          reject(new Error('Failed to get canvas context'))
+          return
+        }
+        
+        // Draw image to canvas
+        ctx.drawImage(img, 0, 0)
+        
+        // Convert canvas to blob
+        canvas.toBlob(
+          (blob) => {
+            if (blob) {
+              resolve(blob)
+            } else {
+              reject(new Error('Failed to convert canvas to blob'))
+            }
+          },
+          'image/jpeg', // Output format
+          0.95 // Quality (0.95 = 95%)
+        )
+      } catch (error) {
+        reject(error)
+      }
+    }
+    
+    img.onerror = () => {
+      reject(new Error('Failed to load image'))
+    }
+    
+    // Start loading the image
+    img.src = imageUrl
+  })
+}
+
+/**
  * Start video generation job
  */
 export async function startVideoGeneration(imageUrl: string): Promise<string> {
@@ -48,24 +99,15 @@ export async function startVideoGeneration(imageUrl: string): Promise<string> {
     console.log('🎬 Starting video generation...')
     console.log('   Image URL:', imageUrl)
     
-    // Fetch the image as a blob
-    // Always use proxy to avoid CORS issues with S3 (works in dev and production)
-    let fetchUrl = imageUrl
-    if (imageUrl.includes('real-estate-brochures-tenori.s3.ap-south-1.amazonaws.com')) {
-      // Extract the path from the S3 URL
-      const url = new URL(imageUrl)
-      const s3Path = url.pathname
-      // Use proxy endpoint (works in dev via Vite proxy and production via Vercel API route)
-      fetchUrl = `/api/s3-proxy?path=${encodeURIComponent(s3Path)}`
-      console.log('   Using proxy URL:', fetchUrl)
-    }
+    // Convert image URL to blob using canvas (100% client-side, no CORS issues)
+    // This works because browsers allow <img> tags to load from any origin
+    console.log('   Converting image URL to blob via canvas...')
+    const imageBlob = await imageUrlToBlob(imageUrl)
     
-    const imageResponse = await fetch(fetchUrl)
-    if (!imageResponse.ok) {
-      throw new Error(`Failed to fetch image: ${imageResponse.status}`)
-    }
-    
-    const imageBlob = await imageResponse.blob()
+    console.log('   Image converted to blob:', {
+      size: imageBlob.size,
+      type: imageBlob.type,
+    })
     
     // Create form data
     const formData = new FormData()
