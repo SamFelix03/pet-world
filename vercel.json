@@ -1,8 +1,16 @@
 {
   "rewrites": [
     {
-      "source": "/api/clipgen/status/:jobId",
-      "destination": "/api/clipgen/status?jobId=:jobId"
+      "source": "/api/imagegen/:path*",
+      "destination": "https://imagegen-739298578243.us-central1.run.app/:path*"
+    },
+    {
+      "source": "/api/clipgen/:path*",
+      "destination": "https://clipgen-739298578243.us-central1.run.app/:path*"
+    },
+    {
+      "source": "/api/s3-proxy",
+      "destination": "/api/s3-proxy"
     }
   ],
   "headers": [
