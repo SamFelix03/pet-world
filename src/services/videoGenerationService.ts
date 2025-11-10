@@ -41,57 +41,6 @@ export interface VideoGenerationResult {
 }
 
 /**
- * Convert image URL to blob using canvas (client-side only, avoids CORS)
- * This works because browsers allow loading images from any origin into <img> tags
- */
-function imageUrlToBlob(imageUrl: string): Promise<Blob> {
-  return new Promise((resolve, reject) => {
-    const img = new Image()
-    img.crossOrigin = 'anonymous' // Try to enable CORS if available
-    
-    img.onload = () => {
-      try {
-        // Create a canvas and draw the image
-        const canvas = document.createElement('canvas')
-        canvas.width = img.width
-        canvas.height = img.height
-        const ctx = canvas.getContext('2d')
-        
-        if (!ctx) {
-          reject(new Error('Failed to get canvas context'))
-          return
-        }
-        
-        // Draw image to canvas
-        ctx.drawImage(img, 0, 0)
-        
-        // Convert canvas to blob
-        canvas.toBlob(
-          (blob) => {
-            if (blob) {
-              resolve(blob)
-            } else {
-              reject(new Error('Failed to convert canvas to blob'))
-            }
-          },
-          'image/jpeg', // Output format
-          0.95 // Quality (0.95 = 95%)
-        )
-      } catch (error) {
-        reject(error)
-      }
-    }
-    
-    img.onerror = () => {
-      reject(new Error('Failed to load image'))
-    }
-    
-    // Start loading the image
-    img.src = imageUrl
-  })
-}
-
-/**
  * Start video generation job
  */
 export async function startVideoGeneration(imageUrl: string): Promise<string> {
@@ -99,15 +48,43 @@ export async function startVideoGeneration(imageUrl: string): Promise<string> {
     console.log('🎬 Starting video generation...')
     console.log('   Image URL:', imageUrl)
     
-    // Convert image URL to blob using canvas (100% client-side, no CORS issues)
-    // This works because browsers allow <img> tags to load from any origin
-    console.log('   Converting image URL to blob via canvas...')
-    const imageBlob = await imageUrlToBlob(imageUrl)
+    // Fetch the image as a blob using a CORS proxy (client-side only solution)
+    // Try multiple CORS proxy services as fallback
+    const corsProxies = [
+      `https://api.allorigins.win/raw?url=${encodeURIComponent(imageUrl)}`,
+      `https://corsproxy.io/?${encodeURIComponent(imageUrl)}`,
+      `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(imageUrl)}`,
+    ]
     
-    console.log('   Image converted to blob:', {
-      size: imageBlob.size,
-      type: imageBlob.type,
-    })
+    let imageBlob: Blob | null = null
+    let lastError: Error | null = null
+    
+    // Try each proxy until one works
+    for (const proxyUrl of corsProxies) {
+      try {
+        console.log(`   Trying CORS proxy: ${proxyUrl.substring(0, 50)}...`)
+        const imageResponse = await fetch(proxyUrl, {
+          method: 'GET',
+          mode: 'cors',
+        })
+        
+        if (!imageResponse.ok) {
+          throw new Error(`Proxy returned ${imageResponse.status}`)
+        }
+        
+        imageBlob = await imageResponse.blob()
+        console.log('✅ Successfully fetched image via CORS proxy')
+        break
+      } catch (error: any) {
+        console.warn(`   Proxy failed: ${error.message}`)
+        lastError = error
+        continue
+      }
+    }
+    
+    if (!imageBlob) {
+      throw new Error(`All CORS proxies failed. Last error: ${lastError?.message || 'Unknown error'}`)
+    }
     
     // Create form data
     const formData = new FormData()
