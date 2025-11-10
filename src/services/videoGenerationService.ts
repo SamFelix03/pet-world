@@ -2,9 +2,7 @@
 // Generates happy/sad/angry videos from pet avatar images using the clipgen API
 
 // Use proxy in development, direct URL in production
-const CLIPGEN_API_URL = import.meta.env.DEV
-  ? '/api/clipgen'
-  : 'https://clipgen-739298578243.us-central1.run.app'
+const CLIPGEN_API_URL = '/api/clipgen'
 const POLL_INTERVAL = 3000 // Poll every 3 seconds
 const MAX_POLL_ATTEMPTS = 120 // Max 6 minutes (120 * 3s)
 

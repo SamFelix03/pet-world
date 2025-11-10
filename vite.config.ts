@@ -56,7 +56,7 @@ export default defineConfig(({ mode }) => {
           rewrite: (path) => {
             // Extract the S3 path from the query parameter
             try {
-              const url = new URL(path, 'http://localhost:5173')
+              const url = new URL(path, 'https://fablelands-stellar-sa5q.vercel.app')
               const s3Path = url.searchParams.get('path')
               if (s3Path) {
                 return decodeURIComponent(s3Path)
