@@ -1,8 +1,8 @@
 // Video Generation Service
 // Generates happy/sad/angry videos from pet avatar images using the clipgen API
 
-// Use proxy in development, direct URL in production
-const CLIPGEN_API_URL =  'https://clipgen-739298578243.us-central1.run.app'  // Direct URL in production
+// Always use proxy path - works in dev (Vite proxy) and production (Vercel API routes)
+const CLIPGEN_API_URL = '/api/clipgen'
 const POLL_INTERVAL = 3000 // Poll every 3 seconds
 const MAX_POLL_ATTEMPTS = 120 // Max 6 minutes (120 * 3s)
 
@@ -49,13 +49,13 @@ export async function startVideoGeneration(imageUrl: string): Promise<string> {
     console.log('   Image URL:', imageUrl)
     
     // Fetch the image as a blob
-    // Use proxy in development to avoid CORS issues with S3
+    // Always use proxy to avoid CORS issues with S3 (works in dev and production)
     let fetchUrl = imageUrl
-    if (import.meta.env.DEV && imageUrl.includes('real-estate-brochures-tenori.s3.ap-south-1.amazonaws.com')) {
+    if (imageUrl.includes('real-estate-brochures-tenori.s3.ap-south-1.amazonaws.com')) {
       // Extract the path from the S3 URL
       const url = new URL(imageUrl)
       const s3Path = url.pathname
-      // Use proxy endpoint
+      // Use proxy endpoint (works in dev via Vite proxy and production via Vercel API route)
       fetchUrl = `/api/s3-proxy?path=${encodeURIComponent(s3Path)}`
       console.log('   Using proxy URL:', fetchUrl)
     }

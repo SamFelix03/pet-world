@@ -1,10 +1,8 @@
 // Image Generation Service
 // Generates pet avatar images using the imagegen API
 
-// Use proxy in development, direct URL in production
-const IMAGEGEN_BASE_URL = 'https://imagegen-739298578243.us-central1.run.app'  // Direct URL in production
-
-const IMAGEGEN_API_URL = `${IMAGEGEN_BASE_URL}/generate-image`
+// Always use proxy path - works in dev (Vite proxy) and production (Vercel API routes)
+const IMAGEGEN_API_URL = '/api/imagegen/generate-image'
 
 export type CreatureType = 'dragon' | 'unicorn' | 'dino'
 
