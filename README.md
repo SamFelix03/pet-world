@@ -106,20 +106,6 @@ Revival costs **0.005 XLM** and gives your pet a second chance at life.
 
 ## Core Features
 
-### NFT Pets That EVOLVE!
-
-Watch your pet grow from a mysterious Egg into a majestic Adult companion! Evolution happens automatically on-chain, but requires your care and attention to progress through each stage.
-
-**The Evolution Journey:**
-
-- **Egg → Baby**: Your pet hatches after just 3 minutes (36 ledger sequences). No requirements needed - just wait for the magic to happen!
-
-- **Baby → Teen**: After 7 minutes total (84 ledger sequences from birth), your pet can evolve to Teen stage - but only if you've kept them happy! They need a happiness level of at least 60 to make this transformation.
-
-- **Teen → Adult**: The final evolution requires patience and excellent care. Your pet must be at least 12 minutes old (144 ledger sequences from birth), maintain happiness of 60 or higher, AND have health of at least 80. This is the ultimate test of your pet-raising skills!
-
-Each evolution triggers automatic regeneration of your pet's visual assets - new images and emotion-based videos that reflect their new stage. The evolution is permanently recorded on-chain, and your pet's personality in conversations evolves too, becoming more mature and wise with each stage.
-
 ### Play With Your Pets!
 
 Bond with your pet through interactive mini-games that increase their happiness and create lasting memories. FableLands features three classic games you can play directly with your pet:
