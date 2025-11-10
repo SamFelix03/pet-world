@@ -1,4 +1,58 @@
 # FableLands
+Raise Your NFT Pets in the Stellar Blockchain!
+
+## Important Links
+
+- **Pitch Deck**: [View Pitch Deck](https://www.canva.com/design/DAG4SrMjiq4/7R2xqCHYnN8Femoocf0YCA/view?utm_content=DAG4SrMjiq4&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=he5bb79aa02)
+- **Demo Video**: Coming soon
+- **Live Demo**: [Try FableLands](https://fablelands-stellar-sa5q.vercel.app/)
+
+### Smart Contract Addresses
+
+- **fablelands Contract** (Testnet): 
+  - Code: [View Here](contracts/fablelands/src/lib.rs)
+  - Address: `CCLH6KHEBKNUX4MOLDKINELR34UWXNTFXCF5XXXSGCT4EZKXQN47U3YE`
+  - [View on Stellar Explorer](https://stellar.expert/explorer/testnet/contract/CCLH6KHEBKNUX4MOLDKINELR34UWXNTFXCF5XXXSGCT4EZKXQN47U3YE)
+
+- **Achievement Contract** (Testnet):
+  - Code: [View Here](contracts/fablelands_achievements/src/lib.rs)
+  - Address: `CDCUYVGQWJ44NDSIITVDLYHWJGYS35LLTVVKLYQUGARH2Z7MCREBIALT`
+  - [View on Stellar Explorer](https://stellar.expert/explorer/testnet/contract/CDCUYVGQWJ44NDSIITVDLYHWJGYS35LLTVVKLYQUGARH2Z7MCREBIALT)
+
+## Table of Contents
+
+- [Introduction](#introduction)
+- [What is a Pet?](#what-is-a-pet)
+  - [Stats System](#stats-system)
+  - [Evolution Stages](#evolution-stages)
+  - [Moods](#moods)
+  - [Death and Revival](#death-and-revival)
+- [Core Features](#core-features)
+  - [NFT Pets That EVOLVE!](#nft-pets-that-evolve)
+  - [Play With Your Pets!](#play-with-your-pets)
+  - [Hold Context-Aware Conversations!](#hold-context-aware-conversations)
+  - [Unlock Achievements!](#unlock-achievements)
+- [Stellar Scaffold Framework Integration](#stellar-scaffold-framework-integration)
+  - [Smart Contract Development](#smart-contract-development)
+  - [Frontend Architecture](#frontend-architecture)
+  - [Stellar Wallet Kit Integration](#stellar-wallet-kit-integration)
+  - [Deployment and Contract Management](#deployment-and-contract-management)
+- [Architecture Overview](#architecture-overview)
+  - [Smart Contracts](#smart-contracts)
+    - [Contract Architecture](#contract-architecture)
+    - [PetWorld Contract](#petworld-contract)
+    - [Achievement Contract](#achievement-contract)
+    - [Stellar Contract Infrastructure Utilization](#stellar-contract-infrastructure-utilization)
+  - [AI Engine](#ai-engine)
+    - [OpenAI Integration](#openai-integration)
+    - [Image Generation Service](#image-generation-service)
+    - [Video Generation Service](#video-generation-service)
+    - [Asset Generation Orchestration](#asset-generation-orchestration)
+- [Technical Stack](#technical-stack)
+- [Development](#development)
+  - [Prerequisites](#prerequisites)
+  - [Setup](#setup)
+- [License](#license)
 
 ## Introduction
 
@@ -8,59 +62,118 @@ What if your NFT could get hungry? What if it could feel lonely? What if it coul
 
 FableLands answers these questions by creating a Crypto-AI game that enables genuine, emotional bonds between users and their digital companions. Each pet is a unique NFT with its own personality, memory, and lifecycle, all managed entirely on-chain through Stellar smart contracts.
 
+## What is a Pet?
+
+A Pet in FableLands is a living, breathing NFT that exists entirely on the Stellar blockchain. Unlike static NFTs, each pet has dynamic stats, emotions, and a complete lifecycle that evolves based on your care and interaction.
+
+### Stats System
+
+Every pet has three core stats that range from 0 to 100:
+
+- **Happiness**: Measures your pet's emotional well-being. Decreases naturally over time (every 5 minutes) and increases when you feed or play with your pet. Happiness directly influences your pet's ability to evolve and their mood.
+
+- **Hunger**: Represents how hungry your pet is. Increases over time (every 2.5 minutes) and decreases when you feed them. If hunger exceeds 80, your pet's health will start to degrade.
+
+- **Health**: Your pet's physical condition. Decreases when hunger is above 80, and can increase when your pet is well-fed and happy. If health reaches 0, your pet dies.
+
+### Evolution Stages
+
+Pets progress through four distinct evolution stages, each with unique visual assets and personality traits:
+
+1. **Egg** (Stage 0): Your pet starts as a mysterious glowing egg. This stage requires no conditions - simply wait 3 minutes (36 ledger sequences) for your pet to hatch into a Baby.
+
+2. **Baby** (Stage 1): A cute, innocent creature full of wonder. To evolve to Teen stage, your pet must be at least 7 minutes old (84 ledger sequences cumulative from birth) AND maintain a happiness level of at least 60.
+
+3. **Teen** (Stage 2): An energetic, sometimes moody adolescent discovering their personality. To reach the final Adult stage, your pet must be at least 12 minutes old (144 ledger sequences cumulative from birth), maintain happiness of at least 60, AND have health of at least 80.
+
+4. **Adult** (Stage 3): A fully evolved, wise, and loyal companion. This is the final stage - your pet has reached maturity and will remain an Adult for the rest of their life.
+
+### Moods
+
+Your pet's mood is automatically determined by their current stats and affects which emotion-based video plays:
+
+- **Happy**: When happiness >= 70, hunger < 50, and health >= 50. Your pet is content and energetic.
+
+- **Sad**: When happiness < 50 OR hunger > 70. Your pet feels neglected or hungry.
+
+- **Angry**: When health < 30 OR happiness < 20. Your pet is in distress and needs immediate care.
+
+- **Neutral**: All other stat combinations. Your pet is in a balanced state.
+
+### Death and Revival
+
+If your pet's health reaches 0, they die. Death is permanent until you choose to revive them. When revived, your pet returns with partial stats:
+- Health: 50
+- Happiness: 30
+- Hunger: 50
+
+Revival costs 0.005 XLM and gives your pet a second chance at life.
+
 ## Core Features
 
-### Pet Lifecycle Management
+### NFT Pets That EVOLVE!
 
-FableLands implements a complete pet lifecycle from birth to evolution, with stat management, death mechanics, and revival capabilities. Pets are born as Eggs with maximum stats and progress through four evolution stages based on time and care. The system tracks happiness, hunger, and health as independent metrics that influence pet behavior and visual appearance.
+Watch your pet grow from a mysterious Egg into a majestic Adult companion! Evolution happens automatically on-chain, but requires your care and attention to progress through each stage.
 
-### Time-Based Stat Decay
+**The Evolution Journey:**
 
-Pets experience realistic stat decay over time, with hunger increasing and happiness decreasing based on elapsed Stellar ledger sequences. This creates urgency for user interaction and makes pet care a continuous engagement rather than a one-time action. The decay rates are configurable through contract constants, allowing for game balance adjustments.
+- **Egg → Baby**: Your pet hatches after just 3 minutes (36 ledger sequences). No requirements needed - just wait for the magic to happen!
 
-### Evolution System
+- **Baby → Teen**: After 7 minutes total (84 ledger sequences from birth), your pet can evolve to Teen stage - but only if you've kept them happy! They need a happiness level of at least 60 to make this transformation.
 
-Pets evolve through four distinct stages: Egg, Baby, Teen, and Adult. Evolution is triggered automatically when pets reach specific ledger count thresholds and maintain minimum happiness levels. Each evolution stage unlocks new visual assets and personality traits in AI conversations. The evolution process is tracked on-chain and triggers automatic asset regeneration for the new stage.
+- **Teen → Adult**: The final evolution requires patience and excellent care. Your pet must be at least 12 minutes old (144 ledger sequences from birth), maintain happiness of 60 or higher, AND have health of at least 80. This is the ultimate test of your pet-raising skills!
 
-### Interactive Games
+Each evolution triggers automatic regeneration of your pet's visual assets - new images and emotion-based videos that reflect their new stage. The evolution is permanently recorded on-chain, and your pet's personality in conversations evolves too, becoming more mature and wise with each stage.
 
-The application includes three mini-games that users can play with their pets: Memory Game, Tic-Tac-Toe, and Rock Paper Scissors. Winning games increases pet happiness and triggers achievement tracking. Game results are remembered by the AI, allowing pets to reference specific games in conversations.
+### Play With Your Pets!
 
-### Achievement System
+Bond with your pet through interactive mini-games that increase their happiness and create lasting memories. FableLands features three classic games you can play directly with your pet:
 
-A comprehensive achievement system tracks user accomplishments across eight different achievement types with varying rarities. Achievements are awarded automatically for milestones like first pet mint, first evolution, feeding streaks, and reaching perfect stats. The system uses an ERC-1155-like structure, allowing achievements to function as collectible NFT badges.
+- **Memory Game**: Test your memory skills by matching pairs of cards. Your pet watches and celebrates when you win!
 
-### AI-Powered Conversations
+- **Tic-Tac-Toe**: Challenge your pet to a strategic game of tic-tac-toe. Every victory brings joy to your companion.
 
-Pets engage in natural language conversations powered by GPT-4o, with context awareness of their current stats, recent actions, and evolution stage. The AI maintains personality consistency across interactions while adapting responses to the pet's emotional state. Conversations feel genuine and create emotional bonds between users and their digital companions.
+- **Rock Paper Scissors**: A quick game of chance that's perfect for a fun break. Your pet gets excited with each round!
 
-### Dynamic Visual Assets
+Winning any game increases your pet's happiness by 25 points, helping them stay happy and healthy. But the magic doesn't stop there - your pet remembers which game you played! When you chat with them later, they'll reference the specific game you played together, creating personalized conversations that feel genuine and meaningful.
 
-Each pet receives unique visual assets generated through AI image and video synthesis. Avatars are created based on creature type, evolution stage, and current life quality. Three emotion-based videos (happy, sad, angry) are generated and automatically displayed based on the pet's current mood, determined by stat thresholds.
+### Hold Context-Aware Conversations!
 
-### Automatic State Maintenance
+Your pet doesn't just respond to your messages - they understand their entire world and remember your shared history. Powered by GPT-4o, each conversation is deeply personalized based on multiple layers of context:
 
-A background cron job automatically updates all pet states every 5 minutes using a contract owner secret key. This ensures pets continue to evolve and experience stat changes even when users are not actively interacting with them. The system scans all existing pets and updates them in batch operations for efficiency.
+**Evolution Stage Personality**: Each stage has a distinct personality. Eggs communicate through mystical vibrations, Babies are excitable and innocent, Teens are energetic but moody, and Adults are wise and protective. The AI maintains this personality consistently across all conversations.
 
-### Pet Timeline and History
+**Current Stats Awareness**: Your pet knows exactly how they're feeling. If they're very hungry (hunger > 80), they'll express weakness. If happiness is low (< 50), they'll show sadness. Perfect stats (all at 100) result in energetic, joyful expressions. The AI analyzes all three stats (happiness, hunger, health) to determine the pet's emotional state.
 
-A comprehensive timeline tracks all significant events in a pet's life, including birth, evolution, feeding, playing, and stat milestones. Events are stored in localStorage with timestamps and stat snapshots, providing users with a detailed history of their pet's journey.
+**Timeline Memory**: Your pet remembers everything that's happened in their life. They know when they were born, when they evolved, when you last fed them, when you played games together, and all the milestones they've reached. This creates continuity that makes conversations feel like talking to a real companion with a memory.
 
-### Supabase Integration
+**Recent Action Context**: The AI remembers your last interaction. If you just fed your pet, they'll thank you. If you just played a game, they'll talk about how much fun it was. If you just refreshed their state, they'll acknowledge it. This creates natural conversation flow that responds to your actions.
 
-Pet metadata including generated asset URLs, creature types, and evolution stages are stored in Supabase for efficient retrieval and display. The database schema includes user management, pet metadata relationships, and Row Level Security policies for data protection.
+**Game-Specific Memory**: When you win a game, your pet remembers which specific game it was (Memory Game, Tic-Tac-Toe, or Rock Paper Scissors) and can reference it in future conversations, making each interaction unique and personal.
 
-### Creature Type Selection
+### Unlock Achievements!
 
-Users can choose from three creature types (dragon, unicorn, dino) when minting pets. This selection influences all generated assets, with creature-specific prompts used for image and video generation. The creature type is stored in Supabase and used throughout the pet's lifecycle.
+Track your pet-raising journey through a comprehensive achievement system that rewards milestones and dedication. Achievements are automatically awarded on-chain and function as collectible NFT badges.
 
-### Real-Time Mood Display
+**Achievement Types:**
 
-Pets visually express their emotional state through mood-based video playback. The system automatically determines mood from stat thresholds and plays the appropriate video (happy, sad, or angry). This creates an immediate visual feedback system that communicates pet well-being without requiring stat inspection.
+- **First Steps** (Common): Mint your first pet and begin your journey.
 
-### Cross-Contract Achievement Tracking
+- **Metamorphosis** (Rare): Witness your pet's first evolution from Egg to Baby.
 
-The PetWorld and Achievement contracts work together seamlessly, with PetWorld automatically calling Achievement contract functions to track user actions and award milestones. This integration happens transparently to users while maintaining on-chain verifiability of all achievements.
+- **Death Survivor** (Rare): Revive a pet from death, giving them a second chance at life.
+
+- **Triple Evolution** (Epic): Guide your pet to the Teen stage, showing mastery of pet care.
+
+- **Perfectionist** (Epic): Achieve the ultimate goal - get all three stats (happiness, hunger, health) to perfect 100 simultaneously.
+
+- **Streak Master** (Uncommon): Feed your pet 10 times, showing consistent care and dedication.
+
+- **Active Player** (Uncommon): Play with your pet 10 times, building a strong bond through games.
+
+- **Legend** (Legendary): Reach the pinnacle - evolve your pet to the final Adult stage. This is the ultimate achievement, reserved for the most dedicated pet owners.
+
+Each achievement is permanently recorded on-chain and can be viewed in your achievement gallery. The system uses an ERC-1155-like structure, making achievements collectible NFT badges that prove your accomplishments in the FableLands universe.
 
 ## Stellar Scaffold Framework Integration
 
