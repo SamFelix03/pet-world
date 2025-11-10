@@ -40,7 +40,7 @@ Raise Your NFT Pets in the Stellar Blockchain!
 - [Architecture Overview](#architecture-overview)
   - [Smart Contracts](#smart-contracts)
     - [Contract Architecture](#contract-architecture)
-    - [PetWorld Contract](#petworld-contract)
+    - [FableLands Contract](#fablelands-contract)
     - [Achievement Contract](#achievement-contract)
     - [Stellar Contract Infrastructure Utilization](#stellar-contract-infrastructure-utilization)
   - [AI Engine](#ai-engine)
@@ -185,8 +185,8 @@ The Stellar Wallet Kit provides standardized wallet connections and transaction 
 Scaffold Stellar simplifies contract deployment through the `stellar registry` command system, enabling contract publishing, instance deployment with constructor parameters, and local alias management for development workflows.
 
 **Deployed Contracts:**
-- **PetWorld Contract:** `CCLH6KHEBKNUX4MOLDKINELR34UWXNTFXCF5XXXSGCT4EZKXQN47U3YE` (Testnet)
-- **Achievement Contract:** `CDCUYVGQWJ44NDSIITVDLYHWJGYS35LLTVVKLYQUGARH2Z7MCREBIALT` (Testnet)
+- **FableLands Contract:** `CCLH6KHEBKNUX4MOLDKINELR34UWXNTFXCF5XXXSGCT4EZKXQN47U3YE` (Testnet)
+- **FableLands Achievement Contract:** `CDCUYVGQWJ44NDSIITVDLYHWJGYS35LLTVVKLYQUGARH2Z7MCREBIALT` (Testnet)
 
 ## Architecture Overview
 
@@ -200,7 +200,7 @@ The application leverages two primary smart contracts deployed on the Stellar Te
 
 ```mermaid
 graph LR
-    subgraph PW["PetWorld Contract"]
+    subgraph PW["FableLands Contract"]
         PW_STORAGE[Storage<br/>Pet Data<br/>Ownership<br/>Stats]
         PW_FUNCS[Functions<br/>mint<br/>feed<br/>play<br/>update_state<br/>evolve]
         PW_INTERNAL[Internal<br/>_check_and_evolve<br/>_call_record_*]
@@ -219,9 +219,9 @@ graph LR
     style AC fill:#fff4e1
 ```
 
-#### PetWorld Contract
+#### FableLands Contract
 
-The PetWorld contract (`contracts/fablelands/src/lib.rs`) serves as the core NFT and pet management system. It implements a comprehensive pet lifecycle with the following key functionalities:
+The FableLands contract (`contracts/fablelands/src/lib.rs`) serves as the core NFT and pet management system. It implements a comprehensive pet lifecycle with the following key functionalities:
 
 **Core Functions:**
 
@@ -266,9 +266,9 @@ The Achievement contract (`contracts/fablelands_achievements/src/lib.rs`) implem
 
 - **`initialize(env, owner)`** - Initializes the contract and pre-populates eight achievement definitions with varying rarities (Common, Uncommon, Rare, Epic, Legendary). See [contracts/fablelands_achievements/src/lib.rs:46](contracts/fablelands_achievements/src/lib.rs#L46)
 
-- **`award_achievement(env, caller, user, achievement_id, pet_token_id)`** - Awards an achievement badge to a user. Only callable by the PetWorld contract or owner. Tracks both user-level and pet-specific achievements. See [contracts/fablelands_achievements/src/lib.rs:93](contracts/fablelands_achievements/src/lib.rs#L93)
+- **`award_achievement(env, caller, user, achievement_id, pet_token_id)`** - Awards an achievement badge to a user. Only callable by the FableLands contract or owner. Tracks both user-level and pet-specific achievements. See [contracts/fablelands_achievements/src/lib.rs:93](contracts/fablelands_achievements/src/lib.rs#L93)
 
-- **`record_first_pet(env, caller, user, pet_token_id)`** - Automatically called by PetWorld contract on mint to award "First Steps" achievement. See [contracts/fablelands_achievements/src/lib.rs:157](contracts/fablelands_achievements/src/lib.rs#L157)
+- **`record_first_pet(env, caller, user, pet_token_id)`** - Automatically called by FableLands contract on mint to award "First Steps" achievement. See [contracts/fablelands_achievements/src/lib.rs:157](contracts/fablelands_achievements/src/lib.rs#L157)
 
 - **`record_feed(env, caller, user, pet_token_id)`** - Tracks feed count and awards "Streak Master" achievement after 10 feeds. See [contracts/fablelands_achievements/src/lib.rs:181](contracts/fablelands_achievements/src/lib.rs#L181)
 
@@ -305,13 +305,13 @@ The contract defines eight achievements across five rarity tiers:
 FableLands leverages several key Stellar Soroban features to enable its functionality:
 
 **Persistent Storage:**
-The contracts use Soroban's persistent storage to maintain pet state, ownership mappings, and achievement records. This enables efficient on-chain data retrieval without requiring external indexing services. The PetWorld contract stores pet structs, token ownership, and user balances in persistent storage, while the Achievement contract maintains achievement definitions and user achievement mappings.
+The contracts use Soroban's persistent storage to maintain pet state, ownership mappings, and achievement records. This enables efficient on-chain data retrieval without requiring external indexing services. The FableLands contract stores pet structs, token ownership, and user balances in persistent storage, while the Achievement contract maintains achievement definitions and user achievement mappings.
 
 **Instance Storage:**
 Configuration constants such as stat decay rates, evolution thresholds, and action costs are stored in instance storage, allowing for future upgrades and parameter adjustments without redeployment.
 
 **Cross-Contract Invocations:**
-The PetWorld contract makes cross-contract calls to the Achievement contract to automatically track user actions and award achievements. This enables seamless integration between pet management and achievement tracking without requiring users to interact with multiple contracts.
+The FableLands contract makes cross-contract calls to the Achievement contract to automatically track user actions and award achievements. This enables seamless integration between pet management and achievement tracking without requiring users to interact with multiple contracts.
 
 **Ledger-Based Time Tracking:**
 The application uses Stellar ledger sequence numbers as a decentralized time source. Pet stats decay based on elapsed ledgers, and evolution stages progress according to ledger-based thresholds. This eliminates the need for external oracles or timestamp services.
