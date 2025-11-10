@@ -20,37 +20,204 @@ The application leverages two primary smart contracts deployed on the Stellar Te
 
 ```mermaid
 graph TB
-    subgraph "Stellar Blockchain"
-        PW[PetWorld Contract<br/>CCLH6KHEBKNUX4MOLDKINELR34UWXNTFXCF5XXXSGCT4EZKXQN47U3YE]
-        AC[Achievement Contract<br/>CDCUYVGQWJ44NDSIITVDLYHWJGYS35LLTVVKLYQUGARH2Z7MCREBIALT]
+    subgraph "PetWorld Contract"
+        subgraph "Instance Storage"
+            IS1[Owner Address]
+            IS2[NextTokenId Counter]
+            IS3[BlocksPerHungerPoint: 30]
+            IS4[BlocksPerHappinessDecay: 60]
+            IS5[FeedCost: 0.001 XLM]
+            IS6[MintCost: 0.01 XLM]
+            IS7[RevivalCost: 0.005 XLM]
+            IS8[EggToBabyBlocks: 36]
+            IS9[BabyToTeenBlocks: 84]
+            IS10[TeenToAdultBlocks: 144]
+            IS11[EvolutionHappinessThreshold: 60]
+            IS12[AchievementContract Address]
+        end
+        
+        subgraph "Persistent Storage"
+            PS1[Pet struct<br/>token_id -> Pet]
+            PS2[TokenOwner<br/>token_id -> Address]
+            PS3[OwnerBalance<br/>Address -> u128]
+            PS4[OwnerTokens<br/>Address, index -> token_id]
+            PS5[TokenURI<br/>token_id -> String]
+        end
+        
+        subgraph "Public Functions"
+            F1[initialize]
+            F2[mint]
+            F3[update_state]
+            F4[feed]
+            F5[play]
+            F6[revive]
+            F7[get_pet_info]
+            F8[get_user_pets]
+            F9[batch_update_state]
+            F10[transfer]
+            F11[owner_of]
+            F12[balance_of]
+        end
+        
+        subgraph "Internal Functions"
+            IF1[_check_and_evolve]
+            IF2[_call_record_first_pet]
+            IF3[_call_record_feed]
+            IF4[_call_record_play]
+            IF5[_call_record_evolution]
+            IF6[_call_record_revival]
+            IF7[_call_record_perfect_stats]
+        end
+        
+        F1 --> IS1
+        F1 --> IS2
+        F1 --> IS3
+        F2 --> PS1
+        F2 --> PS2
+        F2 --> PS3
+        F2 --> PS4
+        F2 --> IF2
+        F3 --> PS1
+        F3 --> IS3
+        F3 --> IS4
+        F3 --> IF1
+        F4 --> F3
+        F4 --> PS1
+        F4 --> IF3
+        F4 --> IF7
+        F4 --> IF1
+        F5 --> F3
+        F5 --> PS1
+        F5 --> IF4
+        F5 --> IF7
+        F5 --> IF1
+        F6 --> PS1
+        F6 --> IF6
+        IF1 --> PS1
+        IF1 --> IS8
+        IF1 --> IS9
+        IF1 --> IS10
+        IF1 --> IS11
+        IF1 --> IF5
+        IF2 --> IS12
+        IF3 --> IS12
+        IF4 --> IS12
+        IF5 --> IS12
+        IF6 --> IS12
+        IF7 --> IS12
     end
     
-    subgraph "External Services"
-        IMG[Image Generation API<br/>imagegen-739298578243.us-central1.run.app]
-        VID[Video Generation API<br/>clipgen-739298578243.us-central1.run.app]
-        OAI[OpenAI GPT-4o API]
-        S3[AWS S3 Storage]
-        SB[Supabase Database]
+    subgraph "Achievement Contract"
+        subgraph "Instance Storage AC"
+            AC_IS1[Owner Address]
+            AC_IS2[PetWorldContract Address]
+        end
+        
+        subgraph "Persistent Storage AC"
+            AC_PS1[Achievement struct<br/>achievement_id -> Achievement]
+            AC_PS2[HasEarnedBadge<br/>Address, achievement_id -> bool]
+            AC_PS3[PetHasBadge<br/>pet_token_id, achievement_id -> bool]
+            AC_PS4[FeedCount<br/>Address -> u128]
+            AC_PS5[PlayCount<br/>Address -> u128]
+            AC_PS6[HasFirstPet<br/>Address -> bool]
+            AC_PS7[HasEvolved<br/>Address -> bool]
+            AC_PS8[HasRevived<br/>Address -> bool]
+            AC_PS9[ReachedStage<br/>Address, stage -> bool]
+            AC_PS10[Balance<br/>Address, achievement_id -> u128]
+            AC_PS11[TotalSupply<br/>achievement_id -> u128]
+        end
+        
+        subgraph "Public Functions AC"
+            AC_F1[initialize]
+            AC_F2[set_petworld_contract]
+            AC_F3[award_achievement]
+            AC_F4[record_first_pet]
+            AC_F5[record_feed]
+            AC_F6[record_play]
+            AC_F7[record_evolution]
+            AC_F8[record_revival]
+            AC_F9[record_perfect_stats]
+            AC_F10[get_user_achievements]
+            AC_F11[get_pet_achievements]
+            AC_F12[get_all_achievements]
+            AC_F13[has_earned]
+        end
+        
+        subgraph "Internal Functions AC"
+            AC_IF1[_initialize_achievements]
+        end
+        
+        AC_F1 --> AC_IS1
+        AC_F1 --> AC_IF1
+        AC_IF1 --> AC_PS1
+        AC_F2 --> AC_IS2
+        AC_F3 --> AC_IS2
+        AC_F3 --> AC_PS2
+        AC_F3 --> AC_PS3
+        AC_F3 --> AC_PS1
+        AC_F3 --> AC_PS10
+        AC_F3 --> AC_PS11
+        AC_F4 --> AC_IS2
+        AC_F4 --> AC_PS6
+        AC_F4 --> AC_F3
+        AC_F5 --> AC_IS2
+        AC_F5 --> AC_PS4
+        AC_F5 --> AC_F3
+        AC_F6 --> AC_IS2
+        AC_F6 --> AC_PS5
+        AC_F6 --> AC_F3
+        AC_F7 --> AC_IS2
+        AC_F7 --> AC_PS7
+        AC_F7 --> AC_PS9
+        AC_F7 --> AC_F3
+        AC_F8 --> AC_IS2
+        AC_F8 --> AC_PS8
+        AC_F8 --> AC_F3
+        AC_F9 --> AC_IS2
+        AC_F9 --> AC_F3
+        AC_F10 --> AC_PS2
+        AC_F11 --> AC_PS3
+        AC_F12 --> AC_PS1
+        AC_F13 --> AC_PS2
     end
     
-    subgraph "Frontend Application"
-        UI[React + TypeScript Frontend]
-        WK[Stellar Wallet Kit]
-    end
+    IF2 -.->|invoke_contract| AC_F4
+    IF3 -.->|invoke_contract| AC_F5
+    IF4 -.->|invoke_contract| AC_F6
+    IF5 -.->|invoke_contract| AC_F7
+    IF6 -.->|invoke_contract| AC_F8
+    IF7 -.->|invoke_contract| AC_F9
     
-    UI -->|Mint/Feed/Play/Update| PW
-    PW -->|Cross-Contract Calls| AC
-    UI -->|Fetch Achievements| AC
-    UI -->|Generate Assets| IMG
-    IMG -->|Store Image| S3
-    UI -->|Generate Videos| VID
-    VID -->|Fetch Image| S3
-    VID -->|Store Videos| S3
-    UI -->|Chat with Pet| OAI
-    UI -->|Store Metadata| SB
-    UI -->|Wallet Operations| WK
-    WK -->|Sign Transactions| PW
-    WK -->|Sign Transactions| AC
+    style IS1 fill:#e1f5ff
+    style IS2 fill:#e1f5ff
+    style IS3 fill:#e1f5ff
+    style IS4 fill:#e1f5ff
+    style IS5 fill:#e1f5ff
+    style IS6 fill:#e1f5ff
+    style IS7 fill:#e1f5ff
+    style IS8 fill:#e1f5ff
+    style IS9 fill:#e1f5ff
+    style IS10 fill:#e1f5ff
+    style IS11 fill:#e1f5ff
+    style IS12 fill:#e1f5ff
+    style PS1 fill:#fff4e1
+    style PS2 fill:#fff4e1
+    style PS3 fill:#fff4e1
+    style PS4 fill:#fff4e1
+    style PS5 fill:#fff4e1
+    style AC_IS1 fill:#e1f5ff
+    style AC_IS2 fill:#e1f5ff
+    style AC_PS1 fill:#fff4e1
+    style AC_PS2 fill:#fff4e1
+    style AC_PS3 fill:#fff4e1
+    style AC_PS4 fill:#fff4e1
+    style AC_PS5 fill:#fff4e1
+    style AC_PS6 fill:#fff4e1
+    style AC_PS7 fill:#fff4e1
+    style AC_PS8 fill:#fff4e1
+    style AC_PS9 fill:#fff4e1
+    style AC_PS10 fill:#fff4e1
+    style AC_PS11 fill:#fff4e1
 ```
 
 #### fablelands Contract
