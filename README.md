@@ -48,11 +48,7 @@ Raise Your NFT Pets in the Stellar Blockchain!
     - [Image Generation Service](#image-generation-service)
     - [Video Generation Service](#video-generation-service)
     - [Asset Generation Orchestration](#asset-generation-orchestration)
-- [Technical Stack](#technical-stack)
-- [Development](#development)
-  - [Prerequisites](#prerequisites)
-  - [Setup](#setup)
-- [License](#license)
+- [Conclusion](#conclusion)
 
 ## Introduction
 
@@ -68,23 +64,23 @@ A Pet in FableLands is a living, breathing NFT that exists entirely on the Stell
 
 ### Stats System
 
-Every pet has three core stats that range from 0 to 100:
+Every pet has three core stats that range from **0 to 100**:
 
-- **Happiness**: Measures your pet's emotional well-being. Decreases naturally over time (every 5 minutes) and increases when you feed or play with your pet. Happiness directly influences your pet's ability to evolve and their mood.
+- **Happiness**: Measures your pet's emotional well-being. Decreases naturally over time (**every 5 minutes**) and increases when you feed or play with your pet. Happiness directly influences your pet's ability to evolve and their mood.
 
-- **Hunger**: Represents how hungry your pet is. Increases over time (every 2.5 minutes) and decreases when you feed them. If hunger exceeds 80, your pet's health will start to degrade.
+- **Hunger**: Represents how hungry your pet is. Increases over time (**every 2.5 minutes**) and decreases when you feed them. If hunger **exceeds 80**, your pet's health will start to degrade.
 
-- **Health**: Your pet's physical condition. Decreases when hunger is above 80, and can increase when your pet is well-fed and happy. If health reaches 0, your pet dies.
+- **Health**: Your pet's physical condition. Decreases when **hunger > 80**, and can increase when your pet is well-fed and happy. If health **reaches 0**, your pet dies.
 
 ### Evolution Stages
 
 Pets progress through four distinct evolution stages, each with unique visual assets and personality traits:
 
-1. **Egg** (Stage 0): Your pet starts as a mysterious glowing egg. This stage requires no conditions - simply wait 3 minutes (36 ledger sequences) for your pet to hatch into a Baby.
+1. **Egg** (Stage 0): Your pet starts as a mysterious glowing egg. This stage requires **no conditions** - simply wait **3 minutes (36 ledger sequences)** for your pet to hatch into a Baby.
 
-2. **Baby** (Stage 1): A cute, innocent creature full of wonder. To evolve to Teen stage, your pet must be at least 7 minutes old (84 ledger sequences cumulative from birth) AND maintain a happiness level of at least 60.
+2. **Baby** (Stage 1): A cute, innocent creature full of wonder. To evolve to Teen stage, your pet must be at least **7 minutes old (84 ledger sequences cumulative from birth)** AND maintain a happiness level of **at least 60**.
 
-3. **Teen** (Stage 2): An energetic, sometimes moody adolescent discovering their personality. To reach the final Adult stage, your pet must be at least 12 minutes old (144 ledger sequences cumulative from birth), maintain happiness of at least 60, AND have health of at least 80.
+3. **Teen** (Stage 2): An energetic, sometimes moody adolescent discovering their personality. To reach the final Adult stage, your pet must be at least **12 minutes old (144 ledger sequences cumulative from birth)**, maintain happiness of **at least 60**, AND have health of **at least 80**.
 
 4. **Adult** (Stage 3): A fully evolved, wise, and loyal companion. This is the final stage - your pet has reached maturity and will remain an Adult for the rest of their life.
 
@@ -92,22 +88,22 @@ Pets progress through four distinct evolution stages, each with unique visual as
 
 Your pet's mood is automatically determined by their current stats and affects which emotion-based video plays:
 
-- **Happy**: When happiness >= 70, hunger < 50, and health >= 50. Your pet is content and energetic.
+- **Happy**: When **happiness >= 70**, **hunger < 50**, and **health >= 50**. Your pet is content and energetic.
 
-- **Sad**: When happiness < 50 OR hunger > 70. Your pet feels neglected or hungry.
+- **Sad**: When **happiness < 50** OR **hunger > 70**. Your pet feels neglected or hungry.
 
-- **Angry**: When health < 30 OR happiness < 20. Your pet is in distress and needs immediate care.
+- **Angry**: When **health < 30** OR **happiness < 20**. Your pet is in distress and needs immediate care.
 
 - **Neutral**: All other stat combinations. Your pet is in a balanced state.
 
 ### Death and Revival
 
-If your pet's health reaches 0, they die. Death is permanent until you choose to revive them. When revived, your pet returns with partial stats:
-- Health: 50
-- Happiness: 30
-- Hunger: 50
+If your pet's health **reaches 0**, they die. Death is permanent until you choose to revive them. When revived, your pet returns with partial stats:
+- **Health: 50**
+- **Happiness: 30**
+- **Hunger: 50**
 
-Revival costs 0.005 XLM and gives your pet a second chance at life.
+Revival costs **0.005 XLM** and gives your pet a second chance at life.
 
 ## Core Features
 
@@ -181,51 +177,27 @@ FableLands leverages the Scaffold Stellar framework to accelerate development an
 
 ### Smart Contract Development
 
-Scaffold Stellar eliminates boilerplate by generating smart contract projects written in Rust and compiled to WebAssembly. The framework provides:
-
-- **Automated Contract Structure:** The contracts are organized with proper Soroban SDK imports, contract types, and implementation patterns. See [contracts/fablelands/src/lib.rs](contracts/fablelands/src/lib.rs) and [contracts/fablelands_achievements/src/lib.rs](contracts/fablelands_achievements/src/lib.rs)
-
-- **Type-Safe Contract Interfaces:** The framework generates TypeScript clients from contract definitions, enabling type-safe contract interactions in the frontend.
-
-- **Hot Reload Support:** Contract changes are automatically detected and rebuilt, allowing for rapid iteration during development.
-
-- **Environment Configuration:** The `environments.toml` file provides centralized configuration for different network environments (local, testnet, mainnet), simplifying deployment across networks.
+Scaffold Stellar eliminates boilerplate by generating smart contract projects written in Rust and compiled to WebAssembly. The framework provides automated contract structure with proper Soroban SDK imports, type-safe TypeScript client generation, hot reload support for rapid iteration, and centralized environment configuration through `environments.toml`. See [contracts/fablelands/src/lib.rs](contracts/fablelands/src/lib.rs) and [contracts/fablelands_achievements/src/lib.rs](contracts/fablelands_achievements/src/lib.rs)
 
 ### Frontend Architecture
 
-The frontend is built with modern TypeScript and React tooling using Vite, generated by Scaffold Stellar:
-
-- **Component Structure:** The application follows a component-based architecture with clear separation of concerns. Pet management, game components, chat interfaces, and achievement displays are modularized for maintainability.
-
-- **Contract Integration:** The `src/services/petworldContract.ts` service provides a clean abstraction layer for contract interactions, handling transaction building, simulation, and error management. See [src/services/petworldContract.ts](src/services/petworldContract.ts)
-
-- **State Management:** React hooks manage application state, with custom hooks for wallet connection, balance tracking, and Supabase user management.
-
-- **Routing:** React Router handles navigation between landing page, pet list, and pet detail views.
+The frontend is built with modern TypeScript and React tooling using Vite. The application follows a component-based architecture with modularized pet management, game components, chat interfaces, and achievement displays. Contract integration is handled through `src/services/petworldContract.ts`, state management uses React hooks, and routing is managed by React Router. See [src/services/petworldContract.ts](src/services/petworldContract.ts)
 
 ### Stellar Wallet Kit Integration
 
-The Stellar Wallet Kit is seamlessly integrated into the application, providing a standardized interface for wallet connections and transaction signing:
+The Stellar Wallet Kit provides standardized wallet connections and transaction signing:
 
-- **Multi-Wallet Support:** The application supports multiple Stellar wallet providers through the Wallet Kit abstraction, allowing users to connect with their preferred wallet.
+- **Multi-Wallet Support:** Supports multiple Stellar wallet providers through the Wallet Kit abstraction.
 
-- **Transaction Signing:** All contract interactions (mint, feed, play, update_state) require wallet authentication and transaction signing, handled transparently by the Wallet Kit.
+- **Transaction Signing:** All contract interactions require wallet authentication, handled transparently by the Wallet Kit.
 
-- **Balance Management:** The Wallet Kit integration enables real-time balance queries and display, ensuring users are aware of their account status.
+- **Balance Management:** Real-time balance queries and display for user account status.
 
-- **Network Configuration:** Wallet operations automatically use the configured network (testnet in production) from environment variables.
-
-**Implementation:** The wallet integration is implemented in `src/hooks/useWallet.ts` and `src/providers/WalletProvider.tsx`, providing a React context for wallet state management throughout the application.
+- **Network Configuration:** Wallet operations automatically use the configured network from environment variables.
 
 ### Deployment and Contract Management
 
-Scaffold Stellar simplifies contract deployment through the `stellar registry` command system:
-
-- **Contract Publishing:** Contracts are published to the Stellar registry for discoverability and versioning.
-
-- **Instance Deployment:** Contract instances are deployed with constructor parameters, enabling multiple contract deployments with different configurations.
-
-- **Alias Management:** Local aliases can be created for deployed contracts, simplifying development and testing workflows.
+Scaffold Stellar simplifies contract deployment through the `stellar registry` command system, enabling contract publishing, instance deployment with constructor parameters, and local alias management for development workflows.
 
 **Deployed Contracts:**
 - **PetWorld Contract:** `CCLH6KHEBKNUX4MOLDKINELR34UWXNTFXCF5XXXSGCT4EZKXQN47U3YE` (Testnet)
@@ -365,136 +337,33 @@ All state-modifying functions require authentication via `require_auth()`, ensur
 **Batch Operations:**
 The `batch_update_state` function enables efficient bulk updates, allowing the automatic maintenance system to update all pets in a single transaction, reducing gas costs and improving scalability.
 
-### AI Engine
+## AI Engine
 
 FableLands integrates multiple AI services to create dynamic, context-aware pet interactions and generate unique visual assets for each pet.
 
-#### OpenAI Integration
+### OpenAI Integration
 
-The OpenAI service (`src/services/openaiService.ts`) powers conversational AI for pets, enabling natural language interactions that adapt to the pet's current state and recent history.
+The OpenAI service powers conversational AI for pets using GPT-4o, enabling natural language interactions that adapt to the pet's current state and recent history. The AI maintains context through evolution stage personality, current stats analysis, recent action memory, game context, and token-specific storage. See [src/services/openaiService.ts](src/services/openaiService.ts)
 
-**Context Awareness:**
+### Image Generation Service
 
-The AI system maintains comprehensive context about each pet's situation:
+The image generation service creates unique pet avatars using AI-powered image synthesis. Prompts are constructed based on creature type (dragon, unicorn, dino), evolution stage, life quality modifiers derived from stats, and pet name integration. Generated images are stored in S3 and referenced in Supabase metadata. See [src/services/imageGenerationService.ts](src/services/imageGenerationService.ts)
 
-- **Evolution Stage Personality:** Each evolution stage (Egg, Baby, Teen, Adult) has distinct personality traits and communication styles. Eggs communicate through mystical vibrations, babies are excitable and innocent, teens are energetic but moody, and adults are wise and protective. See [src/services/openaiService.ts:18](src/services/openaiService.ts#L18)
+### Video Generation Service
 
-- **Current Stats Analysis:** The system analyzes happiness, hunger, and health levels to inform the pet's emotional state. Pets express different emotions based on their stats - very hungry pets feel weak, low happiness indicates sadness, and perfect stats result in energetic expressions. See [src/services/openaiService.ts:55](src/services/openaiService.ts#L55)
+The video generation service generates three emotion-based videos (happy, sad, angry) from pet avatar images using an asynchronous job-based workflow. The service polls for completion and stores videos in S3. The frontend automatically selects and plays the appropriate video based on the pet's current mood determined by stat thresholds. See [src/services/videoGenerationService.ts](src/services/videoGenerationService.ts)
 
-- **Recent Action Memory:** The AI remembers the last action performed (feed, play, update) and acknowledges it in conversations. This creates continuity and makes interactions feel more meaningful. See [src/services/openaiService.ts:36](src/services/openaiService.ts#L36)
+### Asset Generation Orchestration
 
-- **Game Context:** When users win games, the AI is informed about the specific game played (Memory Game, Tic-Tac-Toe, Rock Paper Scissors) and references it in responses, creating personalized interactions. See [src/services/openaiService.ts:33](src/services/openaiService.ts#L33)
-
-- **Token-Specific Context:** Each pet has its own context storage using token ID-based keys, ensuring conversations are personalized to individual pets rather than generic responses. See [src/services/openaiService.ts:38](src/services/openaiService.ts#L38)
-
-**Implementation Details:**
-
-The service uses GPT-4o with a temperature of 0.9 for high creativity while maintaining character consistency. Responses are limited to 100 tokens to keep interactions concise and in-character. The prompt construction dynamically builds context strings based on current stats, recent actions, and user messages, ensuring each interaction is unique and relevant.
-
-#### Image Generation Service
-
-The image generation service (`src/services/imageGenerationService.ts`) creates unique pet avatars using AI-powered image synthesis.
-
-**Prompt Construction:**
-
-The service constructs detailed prompts based on multiple factors:
-
-- **Creature Type:** Supports three creature types (dragon, unicorn, dino) with distinct visual characteristics for each. See [src/services/imageGenerationService.ts:11](src/services/imageGenerationService.ts#L11)
-
-- **Evolution Stage:** Each stage has specific visual descriptions - Eggs are mysterious and glowing, Babies are cute and chibi-style, Teens are energetic with dynamic poses, and Adults are majestic with intricate details. See [src/services/imageGenerationService.ts:12](src/services/imageGenerationService.ts#L12)
-
-- **Life Quality Modifiers:** The system calculates an average quality score from happiness, hunger, and health stats. Pets with high scores (>=70) appear "loved" with bright colors and sparkles, neutral scores (40-70) show balanced appearances, and low scores (<40) appear "neglected" with muted colors and shadows. See [src/services/imageGenerationService.ts:83](src/services/imageGenerationService.ts#L83)
-
-- **Pet Name Integration:** The pet's name is included in the prompt, allowing for personalized visual elements.
-
-**API Integration:**
-
-The service communicates with a custom image generation API endpoint that processes prompts and returns S3-hosted image URLs. The implementation includes proxy support for development environments to handle CORS restrictions.
-
-#### Video Generation Service
-
-The video generation service (`src/services/videoGenerationService.ts`) generates three emotion-based videos (happy, sad, angry) from pet avatar images.
-
-**Video Generation Process:**
-
-The service implements an asynchronous job-based workflow:
-
-1. **Image Upload:** The generated pet avatar image is fetched and uploaded as a FormData blob to the video generation API. See [src/services/videoGenerationService.ts:48](src/services/videoGenerationService.ts#L48)
-
-2. **Job Creation:** The API returns a job ID for tracking the generation process. See [src/services/videoGenerationService.ts:48](src/services/videoGenerationService.ts#L48)
-
-3. **Status Polling:** The service polls the API every 3 seconds to check generation status, with progress callbacks for UI updates. See [src/services/videoGenerationService.ts:130](src/services/videoGenerationService.ts#L130)
-
-4. **Video Retrieval:** Upon completion, the service retrieves URLs for three videos (happy, sad, angry) which are stored in S3 and referenced in Supabase metadata. See [src/services/videoGenerationService.ts:147](src/services/videoGenerationService.ts#L147)
-
-**Mood-Based Display:**
-
-The frontend automatically selects and plays the appropriate video based on the pet's current mood, determined by stat thresholds:
-- **Angry:** Health < 30 OR Happiness < 20
-- **Sad:** Happiness < 50 OR Hunger > 70
-- **Happy:** Happiness >= 70 AND Hunger < 50 AND Health >= 50
-- **Neutral:** All other cases
-
-This creates a dynamic visual experience where pets visually express their emotional state in real-time.
-
-#### Asset Generation Orchestration
-
-The pet asset service (`src/services/petAssetService.ts`) orchestrates the complete asset generation workflow, ensuring atomic operations where either all assets are generated successfully or the operation fails entirely.
-
-**Generation Flow:**
-
-1. User creation/retrieval from Supabase
-2. Avatar image generation with creature-specific prompts
-3. Video generation for all three emotions (happy, sad, angry)
-4. Metadata storage in Supabase with all asset URLs
-5. Evolution-triggered asset regeneration when pets evolve
-
-The service includes comprehensive error handling and progress callbacks for real-time UI updates during the generation process.
+The pet asset service orchestrates the complete asset generation workflow, ensuring atomic operations where either all assets are generated successfully or the operation fails entirely. The workflow includes user creation/retrieval from Supabase, avatar image generation, video generation for all three emotions, metadata storage, and evolution-triggered asset regeneration. See [src/services/petAssetService.ts](src/services/petAssetService.ts)
 
 
-## Technical Stack
+## Conclusion
 
-- **Frontend:** React 18, TypeScript, Vite
-- **Styling:** Tailwind CSS 3.4.18, PostCSS
-- **Blockchain:** Stellar Soroban (Testnet)
-- **Smart Contracts:** Rust, Soroban SDK
-- **AI Services:** OpenAI GPT-4o, Custom Image/Video Generation APIs
-- **Database:** Supabase (PostgreSQL)
-- **Storage:** AWS S3
-- **Wallet Integration:** Stellar Wallet Kit
-- **UI Components:** Radix UI, Custom Design System
+FableLands represents the future of NFTs - where digital assets are not just collectibles, but living companions that grow, learn, and form genuine emotional bonds with their owners. By combining the power of Stellar blockchain, advanced AI, and innovative game mechanics, we've created an experience where every interaction matters and every pet has a unique story to tell.
 
-## Development
+Your pet remembers when you fed them, celebrates when you play games together, and evolves based on your care. They express their emotions through dynamic visuals and engage in meaningful conversations that adapt to their current state and your shared history. This isn't just an NFT - it's a digital companion that truly lives on the blockchain.
 
-### Prerequisites
+**Ready to start your journey?** [Try FableLands now](https://fablelands-stellar-sa5q.vercel.app/) and experience the next generation of NFT ownership. Mint your first pet, watch them evolve, play games together, and unlock achievements as you build an unbreakable bond with your on-chain companion.
 
-- Node.js v22 or higher
-- Rust and Cargo
-- Stellar CLI
-- Scaffold Stellar CLI Plugin
-
-### Setup
-
-1. Install dependencies:
-```bash
-npm install
-```
-
-2. Configure environment variables in `.env`:
-```
-PUBLIC_STELLAR_NETWORK=TESTNET
-PUBLIC_PETWORLD_CONTRACT=CCLH6KHEBKNUX4MOLDKINELR34UWXNTFXCF5XXXSGCT4EZKXQN47U3YE
-PUBLIC_ACHIEVEMENT_CONTRACT=CDCUYVGQWJ44NDSIITVDLYHWJGYS35LLTVVKLYQUGARH2Z7MCREBIALT
-PUBLIC_OPENAI_API_KEY=your_api_key_here
-PUBLIC_SUPABASE_URL=your_supabase_url
-PUBLIC_SUPABASE_ANON_KEY=your_supabase_key
-```
-
-3. Start development server:
-```bash
-npm run dev
-```
-
-## License
-
-See LICENSE file for details.
+The future of NFTs is alive, and it's waiting for you.
